@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>税前税后工资转换</title>
+
+        <script>
+    function ShowElement(element) {
+
+        var oldhtml = element.innerHTML;
+
+        //创建新的input元素
+        var newobj = document.createElement('input');
+        //为新增元素添加类型
+        newobj.type = 'text';
+        //为新增元素添加value值
+        newobj.value = oldhtml;
+        //为新增元素添加光标离开事件
+  
+
+        newobj.onblur = function() {
+              
+            //当触发时判断新增元素值是否为空，为空则不修改，并返回原有值
+            //element.innerHTML = this.value == oldhtml ? oldhtml : this.value;
+            element.innerHTML = this.value
+            //当触发时设置父节点的双击事件为ShowElement，为啥需要重新绑定
+            element.setAttribute("ondblclick", "ShowElement(this);");
+        }
+        //设置该标签的子节点为空
+        element.innerHTML = '';
+        //添加该标签的子节点，input对象
+        element.appendChild(newobj);
+        //设置选择文本的内容或设置光标位置（两个参数：start,end；start为开始位置，end为结束位置；如果开始位置和结束位置相同则就是光标位置）
+        newobj.setSelectionRange(0, oldhtml.length);
+        //设置获得光标
+        newobj.focus();
+
+        //设置父节点的双击事件为空
+        newobj.parentNode.setAttribute("ondblclick", "");
+    }
+
+
+function calculate_shuihou(ele){
+    console.log(ele);
+    confirm("确定提交？");
+    var form_tag=document.getElementsByTagName('form')[0];
+    console.log(form_tag);
+    form_tag.submit();
+
+
+//     var form_data=new Array(7);
+//     for (var i=0;i<form_data.lenth;i++)
+//         {form_data[i]=new Array[2];}
+
+// var tr_lst=document.getElementsByTagName("tr");
+// for (var i=1;i<tr_lst.length;i++){
+//     var tr=tr_lst[i];
+//     var td_lst=tr.getElementsByTagName("td");
+
+//         for (var j=2;j<4;j++){
+ 
+//         form_data[(i-1)][(j-2)]=td_lst[j].innerHTM;}
+//     }
+//     alert(form_data[0][0])
+
+}
+
+
+
+function reset(){
+        var params=new Array();
+
+params[0]=[0,"养老保险",21,8]
+params[1]=[1,"医疗保险",9,2]
+params[2]=[2,"失业保险",2,1]
+params[3]=[3,"工伤保险",0.5,0]
+params[4]=[4,"生育保险",0.8,0]
+params[5]=[5,"住房公积金",8,8]
+params[6]=[6,"补充住房公积金",4,4]
+
+var tr_lst=document.getElementsByTagName("tr");
+for (var i=1;i<tr_lst.length;i++){
+    var tr=tr_lst[i];
+    var td_lst=tr.getElementsByTagName("td");
+
+        for (var j=2;j<4;j++){
+ 
+        td_lst[j].innerHTML=params[i-1][j];}
+    }
+
+}
+    </script>
+
+
+</head>
+
+<body>
+<div id='body_div' border=1px style='border-color: blue'>
+<h2 width='300px' style="text-align:center">五险一金缴纳比例</h2>
+
+
+<div   style="text-align:center;width:450px ;margin:0px auto">
+<form action=""  method="post" enctype="multipart/form-data">
+<table border="1px" style="text-align:center">
+    <thead>
+    </thead>
+
+      <tbody>
+    </tbody>
+
+
+</table>
+
+
+<div style="text-align:center;width:450px ;margin:0px auto">
+
+    <button onclick="reset()">重置</button>
+
+    <p><input type="text" name='salary' placeholder="请在这里输入您的工资"></p>
+<input type="button" onclick="calculate_shuihou(this)" value="税前转税后">
+    <button onclick="calculate_shuiqian(this)">税后转税前</button><p>
+        <p>税前工资是1000元</p>
+
+</div>
+
+</form>
+
+
+<script>
+
+
+    var params=new Array()
+    var head=new Array()
+    head=["序号","项目","单位（%）","个人(%)"]
+params[0]=[0,"养老保险",21,8]
+params[1]=[1,"医疗保险",9,2]
+params[2]=[2,"失业保险",2,1]
+params[3]=[3,"工伤保险",0.5,0]
+params[4]=[4,"生育保险",0.8,0]
+params[5]=[5,"住房公积金",8,8]
+params[6]=[6,"补充住房公积金",4,4]
+
+var thead=document.getElementsByTagName("thead")[0];
+var new_tr = document.createElement('tr');
+thead.appendChild(new_tr)
+
+for (var i=0;i<head.length;i++){
+         var new_th = document.createElement('th');
+         switch(i){
+        case 0:
+         new_th.width="50px";
+         break;
+         case 1:
+         new_th.width="120px";
+         break;
+         case 2:
+         new_th.width="100px";
+         break;
+         case 3:
+         new_th.width="100px";
+         break;
+     }
+
+        new_th.innerHTML=head[i];
+
+        new_tr.appendChild(new_th);
+        }
+
+
+var tbody=document.getElementsByTagName("tbody")[0];
+for (var i=0;i<params.length;i++){
+
+        var new_tr = document.createElement('tr');
+
+
+        for (var j=0;j<params[i].length;j++){
+        var new_td = document.createElement('td');
+         
+         new_td.style="text-align:center";
+         new_td.innerHTML=params[i][j];
+
+          switch(j){
+        case 0:
+         new_td.width="50px";
+         
+         break;
+         case 1:
+         new_td.width="120px";
+         
+         break;
+         case 2:
+         case 3:
+        new_td.width="100px";
+        //这样写不行new_td.ondblclick="howElement(this)";
+        new_td.setAttribute("ondblclick", "ShowElement(this);");
+        // new_td.onclick=function(){
+        //     ShowElement(this);
+        // }
+   
+
+         break;
+        }
+         new_tr.appendChild(new_td);
+    
+        }
+           tbody.appendChild(new_tr);
+
+}
+
+
+</script>
+
+
+</div>
+
+</body>
+</html>
