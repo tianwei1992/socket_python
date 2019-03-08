@@ -21,4 +21,20 @@
     * 这里既然有多线程or多进程，所以用阻塞socket也可以实现并发
     * 非阻塞socket一般搭配异步 -> 异步非阻塞 
     
+ ## WSGI协议
+ 协议分为2部分：Web app和Web Server（Gateway）
+ 
+ server将数据按照WSGI规定的方式传给app，app的处理就是要设置status和header并返回body，最后由server进行http协议的封装。
+ 1. app.py只需要定义一个simple_app(),参数限定为environ和start_response
+ 2. gateway.py从app.py拿到simple_app，然后就从run_with_cgi(simple_app)开始执行。
+ 
+    #### run_with_cgi(simple_app)的执行过程
+    1. 收集环境变量
+    2. 执行result = simple_app(environ, start_response)，其中会又会回调gateway.py中定义的start_response()产生status和response_headers（但没有发出去），还有body返回保存于result。
+    3. 发送数据
+ 3. 回调函数start_response()在gateway中定义，被application回调，主要作用是设置header.
+ 4. app.py所定义的application只要是可调用对象就行，可以是函数，也可以是实现__call__()方法的类的实例.
+    application()会被调用返回result是响应的body，其执行中回调的start_response()会设置好status和header的值。
+    
+    
     
